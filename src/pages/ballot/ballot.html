@@ -17,36 +17,39 @@
         </ion-item>
         
       </ion-list> -->
-<div *ngFor="let c of candidates; let i = index" >
-      <ion-card >
-          <ion-card-content>
-            <ion-card-title>
-                <ion-label>
-                    <ion-img width="8" height="8" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Lotos_flower_symbol.svg/150px-Lotos_flower_symbol.svg.png"></ion-img> 
-                    {{c.name}} 
-                    
-                </ion-label> 
-                <!-- <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                   -->
-              </ion-card-title>
-              <ion-grid>
-                  <ion-row>
-                    <ion-col col-1></ion-col>
-                    <ion-col col-10>
-                        <img src={{c.img}}>            
-                      </ion-col>
-                    <ion-col>
-                        <button ion-button (click)="vote(c.name)" full>Vote</button>
-                      </ion-col>
-                  </ion-row>
-              </ion-grid>
-            <p>
-              {{c.description}}
-            </p>
-     
-
-          </ion-card-content>
-        </ion-card>
-
-  </div>
+      <div *ngIf="candidates">
+          <div *ngFor="let c of candidates; let i = index" >
+            <ion-card >
+                <ion-card-content>
+                  <ion-card-title>
+                      <ion-label>
+                          <ion-img width="8" height="8" src={{c.symbol}}></ion-img> 
+                          {{c.name}} 
+                          
+                      </ion-label> 
+                      <!-- <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                   -->
+                    </ion-card-title>
+                    <ion-grid>
+                        <ion-row>
+                          <ion-col col-1></ion-col>
+                          <ion-col col-10>
+                              <img src={{c.img}}>            
+                            </ion-col>
+                          <ion-col>
+                              <button ion-button (click)="vote(c)" full>Vote</button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                  <p>
+                    {{c.description}}
+                  </p>
+          
+      
+                </ion-card-content>
+              </ion-card>
+      
+        </div>
+    
+      </div>
 
 </ion-content>

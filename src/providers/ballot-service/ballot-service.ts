@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Http, Headers } from '@angular/http';
+import 'rxjs/add/operator/map';
 
 /*
   Generated class for the BallotServiceProvider provider.
@@ -10,8 +11,21 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class BallotServiceProvider {
 
-  constructor(public http: HttpClient) {
+  constructor(public http: Http) {
     console.log('Hello BallotServiceProvider Provider');
+  }
+
+  getBallot(){
+    return new Promise((resolve,reject)=>{
+      this.http.get('http://192.168.43.25:4567/api/getotp')
+        .map(res => res.json())
+        .subscribe(res =>{
+          resolve(res);
+        },(err)=>{
+          reject(err);
+        })
+    })
+
   }
 
 }
