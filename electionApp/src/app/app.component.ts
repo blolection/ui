@@ -5,10 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { SignupPage } from '../pages/signup/signup';
 import { BallotPage } from '../pages/ballot/ballot';
-import { CloudPage } from '../pages/cloud/cloud';
 
 
-import { MenuPage } from '../pages/menu/menu';
 
 
 
@@ -17,7 +15,7 @@ import { MenuPage } from '../pages/menu/menu';
 })
 export class MyApp {
   @ViewChild(Nav) navCtrl: Nav;
-    rootPage:any = MenuPage;
+    rootPage:any = BallotPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
@@ -26,15 +24,5 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
     });
-  }
-  goToSignup(params){
-    if (!params) params = {};
-    this.navCtrl.setRoot(SignupPage);
-  }goToBallot(params){
-    if (!params) params = {};
-    this.navCtrl.setRoot(BallotPage);
-  }goToCloud(params){
-    if (!params) params = {};
-    this.navCtrl.setRoot(CloudPage);
   }
 }

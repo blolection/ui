@@ -1,22 +1,36 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
     <ion-title>
       Ballot
     </ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content padding id="page2">
-  <ion-list id="ballot-list2">
-    <ion-item-sliding>
-      <ion-item color="none" id="ballot-list-item4">
-        Item
-      </ion-item>
-      <ion-item-options side="left">
-        <button ion-button color="positive"></button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+
+
+<ion-content padding>
+    <ion-list>
+        <ion-item *ngFor="let c of candidates" >
+            <ion-label>{{c.name}} </ion-label> 
+            <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>
+
+
+        </ion-item>
+        
+      </ion-list>
+      <ion-card *ngFor="let c of candidates" >
+          <ion-card-content>
+            <ion-card-title>
+                <ion-label>{{c.name}} </ion-label> 
+                <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                  
+              </ion-card-title>
+              <ion-img width="80" height="80" src={{c.img}}></ion-img>              
+            <p>
+              The most popular industrial group ever, and largely
+              responsible for bringing the music to a mass audience.
+            </p>
+          </ion-card-content>
+        </ion-card>
+
+
+
 </ion-content>
