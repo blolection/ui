@@ -3,9 +3,9 @@ import { Platform, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-// import { SignupPage } from '../pages/signup/signup';
+import { SignupPage } from '../pages/signup/signup';
 import { BallotPage } from '../pages/ballot/ballot';
-
+import { VotePage} from '../pages/vote/vote';
 
 
 
