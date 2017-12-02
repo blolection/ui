@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
+import {VotePage} from '../vote/vote';
+
 @Component({
   selector: 'page-ballot',
   templateUrl: 'ballot.html'
@@ -44,6 +46,8 @@ vote(name){
   
         }).catch(console.log);
       });
-  
+
+      this.navCtrl.push(VotePage);
+      
     }
 }

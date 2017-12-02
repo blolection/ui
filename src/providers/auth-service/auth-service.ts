@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Http, Headers } from '@angular/http';
+import 'rxjs/add/operator/map';
 
 /*
   Generated class for the AuthServiceProvider provider.
@@ -10,8 +11,34 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AuthServiceProvider {
 
-  constructor(public http: HttpClient) {
+  constructor(private http: Http) {
     console.log('Hello AuthServiceProvider Provider');
+
+   
+  }
+  getOTP(phone:Number){
+    return new Promise((resolve,reject)=>{
+      this.http.post('http://192.168.43.25:4567/api/getotp',{number:phone})
+        .map(res => res.json())
+        .subscribe(res =>{
+          resolve(res);
+        },(err)=>{
+          reject(err);
+        })
+    })
+
   }
 
+  getToken(phone,otp){
+    return new Promise((resolve,reject)=>{
+      this.http.post('http://192.168.43.25:4567/api/verifyotp',{number:phone,otp:otp})
+        .map(res => res.json())
+        .subscribe(res =>{
+          resolve(res);
+        },(err)=>{
+          reject(err);
+        })
+    })
+
+  }
 }

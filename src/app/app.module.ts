@@ -8,20 +8,24 @@ import { VotePage} from '../pages/vote/vote'
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import {AuthServiceProvider} from '../providers/auth-service/auth-service'
 
 import { IonicStorageModule } from '@ionic/storage';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
     MyApp,
     SignupPage,
     BallotPage,
-    VotePage
+    VotePage,
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()    
+    IonicStorageModule.forRoot(),
+    HttpModule
+       
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -33,6 +37,7 @@ import { IonicStorageModule } from '@ionic/storage';
   providers: [
     StatusBar,
     SplashScreen,
+    AuthServiceProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
