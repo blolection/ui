@@ -22,10 +22,9 @@
             <ion-card >
                 <ion-card-content>
                   <ion-card-title>
+                      
                       <ion-label>
-                          <ion-img width="8" height="8" src={{c.symbol}}></ion-img> 
                           {{c.name}} 
-                          
                       </ion-label> 
                       <!-- <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                   -->
                     </ion-card-title>
@@ -33,7 +32,7 @@
                         <ion-row>
                           <ion-col col-1></ion-col>
                           <ion-col col-10>
-                              <img src={{c.img}}>            
+                              <img src="{{c.image}}">            
                             </ion-col>
                           <ion-col>
                               <button ion-button (click)="vote(c)" full>Vote</button>

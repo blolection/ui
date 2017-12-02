@@ -26,7 +26,6 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      this.rootPage=SignupPage;
     });
 
     storage.ready().then(() => {
@@ -37,7 +36,7 @@ export class MyApp {
         console.log(this.user);
 
         if(this.user){
-          if(this.user.token.length && this.user.vote.length>0){
+          if(this.user.token.length && this.user.uid.length>0){
             this.rootPage = VotePage;          
           }else if(this.user.token.length){
             this.rootPage= BallotPage;

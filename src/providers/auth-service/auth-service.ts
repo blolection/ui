@@ -18,7 +18,7 @@ export class AuthServiceProvider {
   }
   getOTP(phone:Number){
     return new Promise((resolve,reject)=>{
-      this.http.post('http://192.168.43.25:4567/api/getotp',{number:phone})
+      this.http.post('http://139.59.28.1:4567/api/getotp',{number:phone})
         .map(res => res.json())
         .subscribe(res =>{
           resolve(res);
@@ -31,7 +31,7 @@ export class AuthServiceProvider {
 
   getToken(phone,otp){
     return new Promise((resolve,reject)=>{
-      this.http.post('http://192.168.43.25:4567/api/verifyotp',{number:phone,otp:otp})
+      this.http.post('http://139.59.28.1:4567/api/verifyotp',{number:phone,otp:otp})
         .map(res => res.json())
         .subscribe(res =>{
           resolve(res);

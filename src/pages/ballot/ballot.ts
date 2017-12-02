@@ -16,8 +16,7 @@ export class BallotPage {
   response:any;
   constructor(public navCtrl: NavController, private storage: Storage,public ballot:BallotServiceProvider) {
 
-    this.candidates={};
-    // this.candidates=[
+    this.candidates=[];
     // {name:"Vasundhara Raje",  img:"http://vasundhararaje.in/wp-content/uploads/2016/06/vasundhara-raje-vidyanjali-homepage.jpg",symbol:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Lotos_flower_symbol.svg/150px-Lotos_flower_symbol.svg.png",description:"Blah, blah, Blah"},
     // {name:"Bhanu",img:"https://timesofindia.indiatimes.com/photo/msid-58915663/58915663.jpg?143864",description:"Tata tata tata"},
     // {name:"Manohar Lal", img:"",description:"Ola Gama beta tata"}];
@@ -31,39 +30,42 @@ export class BallotPage {
       }).catch(console.log);
     });
 
+    this.getBallot();
 
 }
 
 getBallot(){
   this.response={};
-  this.ballot.getBallot().then
-
+  console.log('Getting balot')
   this.ballot.getBallot().then((res) =>{
+    console.log(res)
     this.response=res;
-    console.log("This is response",this.response)
-    this.candidates=this.response
+    console.log("This is response",this.response.candidates)
+    this.candidates=JSON.parse(this.response.candidates);
   });  
 
 }
 
 vote(candidate){
+  this.response={};
   
       console.log(`${candidate.name} got the vote`);
       
-      this.user.vote=candidate.name;
-      
+      this.user.uid=candidate.uid;
+      this.user.phone=Number(this.user.phone);
+      this.user.uid=Number(this.user.uid);
+
       this.storage.set('user',JSON.stringify(this.user));
-      
-      this.storage.ready().then(() => {
-        this.storage.get('user').then(user => {
-          this.user = JSON.parse(user);
-          console.log("This is user data");
-          console.log(this.user);
-          
+
+      this.ballot.vote(this.user).then((res)=>{
+        this.response=res;
+        if(this.response.status){
           this.navCtrl.push(VotePage);
-          
-        }).catch(console.log);
-      });
+        
+        }
+        
+      })
+      
 
       
     }

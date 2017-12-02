@@ -57,12 +57,12 @@ export class SignupPage {
     this.response={};
     if(Number(this.otp)/10000>=1){
 
-      this.auth.getToken(this.phone,this.otp).then((res)=>{
+      this.auth.getToken(Number(this.phone),Number(this.otp)).then((res)=>{
         this.response=res;
         console.log("This is response",this.response)
         
         if(this.response.status){
-          this.storage.set('user',JSON.stringify({phone:this.phone,token:this.response.token,vote:''})); 
+          this.storage.set('user',JSON.stringify({phone:Number(this.phone),token:this.response.token,uid:''})); 
           this.navCtrl.push(BallotPage)
           
         }

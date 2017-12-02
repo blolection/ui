@@ -17,7 +17,20 @@ export class BallotServiceProvider {
 
   getBallot(){
     return new Promise((resolve,reject)=>{
-      this.http.get('http://192.168.43.25:4567/api/getotp')
+      this.http.get('http://139.59.28.1:4567/api/candidates')
+        .map(res => res.json())
+        .subscribe(res =>{
+          resolve(res);
+        },(err)=>{
+          reject(err);
+        })
+    })
+
+  }
+
+  vote(user){
+    return new Promise((resolve,reject)=>{
+      this.http.post('http://139.59.28.1:4567/api/vote',user)
         .map(res => res.json())
         .subscribe(res =>{
           resolve(res);
