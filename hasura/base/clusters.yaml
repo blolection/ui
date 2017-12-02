@@ -1,0 +1,7 @@
+- alias: blocelection
+  config:
+    configmap: controller-conf
+    namespace: hasura
+  data: null
+  kubeContext: citizenry41
+  name: citizenry41
