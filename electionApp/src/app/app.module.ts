@@ -2,24 +2,19 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { CartPage } from '../pages/cart/cart';
+import { SignupPage } from '../pages/signup/signup';
+import { BallotPage } from '../pages/ballot/ballot';
 import { CloudPage } from '../pages/cloud/cloud';
 
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { AuthProvider } from '../providers/auth/auth';
-import { AuthServiceProvider } from '../providers/auth-service/auth-service';
-import { BoothServiceProvider } from '../providers/booth-service/booth-service';
-import { BallotServiceProvider } from '../providers/ballot-service/ballot-service';
-import { VoteServiceProvider } from '../providers/vote-service/vote-service';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
-    CartPage,
+    SignupPage,
+    BallotPage,
     CloudPage
   ],
   imports: [
@@ -29,19 +24,14 @@ import { VoteServiceProvider } from '../providers/vote-service/vote-service';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
-    CartPage,
+    SignupPage,
+    BallotPage,
     CloudPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider,
-    AuthServiceProvider,
-    BoothServiceProvider,
-    BallotServiceProvider,
-    VoteServiceProvider
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}

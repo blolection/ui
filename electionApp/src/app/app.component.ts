@@ -3,11 +3,12 @@ import { Platform, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { CartPage } from '../pages/cart/cart';
+import { SignupPage } from '../pages/signup/signup';
+import { BallotPage } from '../pages/ballot/ballot';
 import { CloudPage } from '../pages/cloud/cloud';
 
 
-import { HomePage } from '../pages/home/home';
+import { MenuPage } from '../pages/menu/menu';
 
 
 
@@ -16,7 +17,7 @@ import { HomePage } from '../pages/home/home';
 })
 export class MyApp {
   @ViewChild(Nav) navCtrl: Nav;
-    rootPage:any = HomePage;
+    rootPage:any = MenuPage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
@@ -26,12 +27,12 @@ export class MyApp {
       splashScreen.hide();
     });
   }
-  goToHome(params){
+  goToSignup(params){
     if (!params) params = {};
-    this.navCtrl.setRoot(HomePage);
-  }goToCart(params){
+    this.navCtrl.setRoot(SignupPage);
+  }goToBallot(params){
     if (!params) params = {};
-    this.navCtrl.setRoot(CartPage);
+    this.navCtrl.setRoot(BallotPage);
   }goToCloud(params){
     if (!params) params = {};
     this.navCtrl.setRoot(CloudPage);
