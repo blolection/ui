@@ -4,7 +4,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { SignupPage } from '../pages/signup/signup';
 import { BallotPage } from '../pages/ballot/ballot';
-import { CloudPage } from '../pages/cloud/cloud';
 
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -14,8 +13,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   declarations: [
     MyApp,
     SignupPage,
-    BallotPage,
-    CloudPage
+    BallotPage
   ],
   imports: [
     BrowserModule,
@@ -25,8 +23,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   entryComponents: [
     MyApp,
     SignupPage,
-    BallotPage,
-    CloudPage
+    BallotPage
   ],
   providers: [
     StatusBar,

@@ -8,7 +8,7 @@
 
 
 <ion-content padding>
-    <ion-list>
+    <!-- <ion-list>
         <ion-item *ngFor="let c of candidates" >
             <ion-label>{{c.name}} </ion-label> 
             <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>
@@ -16,21 +16,33 @@
 
         </ion-item>
         
-      </ion-list>
-      <ion-card *ngFor="let c of candidates" >
+      </ion-list> -->
+<div *ngFor="let c of candidates" >
+      <ion-card >
           <ion-card-content>
             <ion-card-title>
                 <ion-label>{{c.name}} </ion-label> 
-                <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                  
+                <!-- <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                   -->
               </ion-card-title>
-              <ion-img width="80" height="80" src={{c.img}}></ion-img>              
+              <ion-grid>
+                  <ion-row>
+                    <ion-col col-7>
+                        <img src={{c.img}}>            
+                      </ion-col>
+                    <ion-col>
+                      3 of 3
+                    </ion-col>
+                  </ion-row>
+              </ion-grid>
             <p>
               The most popular industrial group ever, and largely
               responsible for bringing the music to a mass audience.
             </p>
+     
+
           </ion-card-content>
         </ion-card>
 
-
+      </div>
 
 </ion-content>
