@@ -14,8 +14,9 @@ export class BallotPage {
   user:any;
   candidates:any;
   response:any;
+  payload:any;
   constructor(public navCtrl: NavController, private storage: Storage,public ballot:BallotServiceProvider) {
-
+    this.payload={};
     this.candidates=[];
     // {name:"Vasundhara Raje",  img:"http://vasundhararaje.in/wp-content/uploads/2016/06/vasundhara-raje-vidyanjali-homepage.jpg",symbol:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Lotos_flower_symbol.svg/150px-Lotos_flower_symbol.svg.png",description:"Blah, blah, Blah"},
     // {name:"Bhanu",img:"https://timesofindia.indiatimes.com/photo/msid-58915663/58915663.jpg?143864",description:"Tata tata tata"},
@@ -55,14 +56,19 @@ vote(candidate){
       this.user.phone=Number(this.user.phone);
       this.user.uid=Number(this.user.uid);
 
+      this.payload.number=this.user.phone;
+      this.payload.uid=this.user.uid;
+      this.payload.token=this.user.token;
       this.storage.set('user',JSON.stringify(this.user));
 
-      this.ballot.vote(this.user).then((res)=>{
+      this.ballot.vote(this.payload).then((res)=>{
         this.response=res;
+      
         if(this.response.status){
-          this.navCtrl.push(VotePage);
-        
+          this.navCtrl.push(VotePage);          
         }
+        
+        
         
       })
       

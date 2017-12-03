@@ -9,6 +9,7 @@ webpackJsonp([1],{
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__vote_vote__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_ballot_service_ballot_service__ = __webpack_require__(280);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -22,16 +23,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var BallotPage = (function () {
-    function BallotPage(navCtrl, storage) {
+    function BallotPage(navCtrl, storage, ballot) {
         var _this = this;
         this.navCtrl = navCtrl;
         this.storage = storage;
-        this.candidates = [
-            { name: "Vasundhara Raje", img: "http://vasundhararaje.in/wp-content/uploads/2016/06/vasundhara-raje-vidyanjali-homepage.jpg", symbol: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Lotos_flower_symbol.svg/150px-Lotos_flower_symbol.svg.png", description: "Blah, blah, Blah" },
-            { name: "Bhanu", img: "https://timesofindia.indiatimes.com/photo/msid-58915663/58915663.jpg?143864", description: "Tata tata tata" },
-            { name: "Manohar Lal", img: "", description: "Ola Gama beta tata" }
-        ];
+        this.ballot = ballot;
+        this.payload = {};
+        this.candidates = [];
+        // {name:"Vasundhara Raje",  img:"http://vasundhararaje.in/wp-content/uploads/2016/06/vasundhara-raje-vidyanjali-homepage.jpg",symbol:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Lotos_flower_symbol.svg/150px-Lotos_flower_symbol.svg.png",description:"Blah, blah, Blah"},
+        // {name:"Bhanu",img:"https://timesofindia.indiatimes.com/photo/msid-58915663/58915663.jpg?143864",description:"Tata tata tata"},
+        // {name:"Manohar Lal", img:"",description:"Ola Gama beta tata"}];
         storage.ready().then(function () {
             storage.get('user').then(function (user) {
                 _this.user = JSON.parse(user);
@@ -39,26 +42,43 @@ var BallotPage = (function () {
                 console.log(_this.user);
             }).catch(console.log);
         });
+        this.getBallot();
     }
-    BallotPage.prototype.vote = function (name) {
+    BallotPage.prototype.getBallot = function () {
         var _this = this;
-        console.log(name + " got the vote");
-        this.user.vote = name;
-        this.storage.set('user', JSON.stringify(this.user));
-        this.storage.ready().then(function () {
-            _this.storage.get('user').then(function (user) {
-                _this.user = JSON.parse(user);
-                console.log("This is user data");
-                console.log(_this.user);
-            }).catch(console.log);
+        this.response = {};
+        console.log('Getting balot');
+        this.ballot.getBallot().then(function (res) {
+            console.log(res);
+            _this.response = res;
+            console.log("This is response", _this.response.candidates);
+            _this.candidates = JSON.parse(_this.response.candidates);
         });
-        this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__vote_vote__["a" /* VotePage */]);
+    };
+    BallotPage.prototype.vote = function (candidate) {
+        var _this = this;
+        this.response = {};
+        console.log(candidate.name + " got the vote");
+        this.user.uid = candidate.uid;
+        this.user.phone = Number(this.user.phone);
+        this.user.uid = Number(this.user.uid);
+        this.payload.number = this.user.phone;
+        this.payload.uid = this.user.uid;
+        this.payload.token = this.user.token;
+        this.storage.set('user', JSON.stringify(this.user));
+        this.ballot.vote(this.payload).then(function (res) {
+            _this.response = res;
+            if (_this.response.status) {
+                _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_3__vote_vote__["a" /* VotePage */]);
+            }
+        });
     };
     BallotPage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-ballot',template:/*ion-inline-start:"/home/harish/election/src/pages/ballot/ballot.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Ballot\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n\n<ion-content padding>\n    <!-- <ion-list>\n        <ion-item *ngFor="let c of candidates" >\n            <ion-label>{{c.name}} </ion-label> \n            <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>\n\n\n        </ion-item>\n        \n      </ion-list> -->\n<div *ngFor="let c of candidates; let i = index" >\n      <ion-card >\n          <ion-card-content>\n            <ion-card-title>\n                <ion-label>\n                    <ion-img width="8" height="8" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Lotos_flower_symbol.svg/150px-Lotos_flower_symbol.svg.png"></ion-img> \n                    {{c.name}} \n                    \n                </ion-label> \n                <!-- <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                   -->\n              </ion-card-title>\n              <ion-grid>\n                  <ion-row>\n                    <ion-col col-1></ion-col>\n                    <ion-col col-10>\n                        <img src={{c.img}}>            \n                      </ion-col>\n                    <ion-col>\n                        <button ion-button (click)="vote(c.name)" full>Vote</button>\n                      </ion-col>\n                  </ion-row>\n              </ion-grid>\n            <p>\n              {{c.description}}\n            </p>\n     \n\n          </ion-card-content>\n        </ion-card>\n\n  </div>\n\n</ion-content>'/*ion-inline-end:"/home/harish/election/src/pages/ballot/ballot.html"*/
+            selector: 'page-ballot',template:/*ion-inline-start:"/home/harish/election/src/pages/ballot/ballot.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Ballot\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n\n<ion-content padding>\n    <!-- <ion-list>\n        <ion-item *ngFor="let c of candidates" >\n            <ion-label>{{c.name}} </ion-label> \n            <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>\n\n\n        </ion-item>\n        \n      </ion-list> -->\n      <div *ngIf="candidates">\n          <div *ngFor="let c of candidates; let i = index" >\n            <ion-card >\n                <ion-card-content>\n                  <ion-card-title>\n                      \n                      <ion-label>\n                          {{c.name}} \n                      </ion-label> \n                      <!-- <ion-toggle [(ngModel)]="c.vote"  (ngModelChange)="vote(c.name,c.vote)"></ion-toggle>                   -->\n                    </ion-card-title>\n                    <ion-grid>\n                        <ion-row>\n                          <ion-col col-1></ion-col>\n                          <ion-col col-10>\n                              <img src="{{c.image}}">            \n                            </ion-col>\n                          <ion-col>\n                              <button ion-button (click)="vote(c)" full>Vote</button>\n                            </ion-col>\n                        </ion-row>\n                    </ion-grid>\n                  <p>\n                    {{c.description}}\n                  </p>\n          \n      \n                </ion-card-content>\n              </ion-card>\n      \n        </div>\n    \n      </div>\n\n</ion-content>'/*ion-inline-end:"/home/harish/election/src/pages/ballot/ballot.html"*/,
+            providers: [__WEBPACK_IMPORTED_MODULE_4__providers_ballot_service_ballot_service__["a" /* BallotServiceProvider */]]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */], __WEBPACK_IMPORTED_MODULE_4__providers_ballot_service_ballot_service__["a" /* BallotServiceProvider */]])
     ], BallotPage);
     return BallotPage;
 }());
@@ -67,7 +87,7 @@ var BallotPage = (function () {
 
 /***/ }),
 
-/***/ 112:
+/***/ 113:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -80,16 +100,16 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 112;
+webpackEmptyAsyncContext.id = 113;
 
 /***/ }),
 
-/***/ 154:
+/***/ 155:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"../pages/vote/vote.module": [
-		280,
+		281,
 		0
 	]
 };
@@ -104,12 +124,12 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
-webpackAsyncContext.id = 154;
+webpackAsyncContext.id = 155;
 module.exports = webpackAsyncContext;
 
 /***/ }),
 
-/***/ 198:
+/***/ 199:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -118,7 +138,7 @@ module.exports = webpackAsyncContext;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ballot_ballot__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_storage__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_auth_service_auth_service__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__providers_auth_service_auth_service__ = __webpack_require__(201);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -170,11 +190,11 @@ var SignupPage = (function () {
         var _this = this;
         this.response = {};
         if (Number(this.otp) / 10000 >= 1) {
-            this.auth.getToken(this.phone, this.otp).then(function (res) {
+            this.auth.getToken(Number(this.phone), Number(this.otp)).then(function (res) {
                 _this.response = res;
                 console.log("This is response", _this.response);
                 if (_this.response.status) {
-                    _this.storage.set('user', JSON.stringify({ phone: _this.phone, token: _this.response.token, vote: '' }));
+                    _this.storage.set('user', JSON.stringify({ phone: Number(_this.phone), token: _this.response.token, uid: '' }));
                     _this.navCtrl.push(__WEBPACK_IMPORTED_MODULE_2__ballot_ballot__["a" /* BallotPage */]);
                 }
             });
@@ -194,14 +214,14 @@ var SignupPage = (function () {
 
 /***/ }),
 
-/***/ 199:
+/***/ 201:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthServiceProvider; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(200);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(279);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(200);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -229,7 +249,7 @@ var AuthServiceProvider = (function () {
     AuthServiceProvider.prototype.getOTP = function (phone) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.http.post('http://192.168.43.25:4567/api/getotp', { number: phone })
+            _this.http.post('http://139.59.28.1:4567/api/getotp', { number: phone })
                 .map(function (res) { return res.json(); })
                 .subscribe(function (res) {
                 resolve(res);
@@ -241,7 +261,7 @@ var AuthServiceProvider = (function () {
     AuthServiceProvider.prototype.getToken = function (phone, otp) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.http.post('http://192.168.43.25:4567/api/verifyotp', { number: phone, otp: otp })
+            _this.http.post('http://139.59.28.1:4567/api/verifyotp', { number: phone, otp: otp })
                 .map(function (res) { return res.json(); })
                 .subscribe(function (res) {
                 resolve(res);
@@ -261,13 +281,13 @@ var AuthServiceProvider = (function () {
 
 /***/ }),
 
-/***/ 201:
+/***/ 202:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(202);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(225);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(226);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -275,7 +295,7 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 225:
+/***/ 226:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -283,15 +303,15 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(270);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(271);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__ = __webpack_require__(199);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_ballot_ballot__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_vote_vote__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_status_bar__ = __webpack_require__(194);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ionic_native_splash_screen__ = __webpack_require__(197);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_auth_service_auth_service__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_native_status_bar__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ionic_native_splash_screen__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_auth_service_auth_service__ = __webpack_require__(201);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__ionic_storage__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__angular_http__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__angular_http__ = __webpack_require__(103);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -353,16 +373,16 @@ var AppModule = (function () {
 
 /***/ }),
 
-/***/ 270:
+/***/ 271:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(194);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(197);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__ = __webpack_require__(199);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_ballot_ballot__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_vote_vote__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_storage__ = __webpack_require__(40);
@@ -392,7 +412,6 @@ var MyApp = (function () {
             // Here you can do any higher level native things you might need.
             statusBar.styleDefault();
             splashScreen.hide();
-            _this.rootPage = __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__["a" /* SignupPage */];
         });
         storage.ready().then(function () {
             storage.get('user').then(function (user) {
@@ -401,7 +420,7 @@ var MyApp = (function () {
                 console.log("This is user data");
                 console.log(_this.user);
                 if (_this.user) {
-                    if (_this.user.token.length && _this.user.vote.length > 0) {
+                    if (_this.user.token.length && _this.user.uid.length > 0) {
                         _this.rootPage = __WEBPACK_IMPORTED_MODULE_6__pages_vote_vote__["a" /* VotePage */];
                     }
                     else if (_this.user.token.length) {
@@ -427,6 +446,73 @@ var MyApp = (function () {
 }());
 
 //# sourceMappingURL=app.component.js.map
+
+/***/ }),
+
+/***/ 280:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BallotServiceProvider; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(200);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+/*
+  Generated class for the BallotServiceProvider provider.
+
+  See https://angular.io/guide/dependency-injection for more info on providers
+  and Angular DI.
+*/
+var BallotServiceProvider = (function () {
+    function BallotServiceProvider(http) {
+        this.http = http;
+        console.log('Hello BallotServiceProvider Provider');
+    }
+    BallotServiceProvider.prototype.getBallot = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.get('http://139.59.28.1:4567/api/candidates')
+                .map(function (res) { return res.json(); })
+                .subscribe(function (res) {
+                resolve(res);
+            }, function (err) {
+                reject(err);
+            });
+        });
+    };
+    BallotServiceProvider.prototype.vote = function (user) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.http.post('http://139.59.28.1:4567/api/vote', user)
+                .map(function (res) { return res.json(); })
+                .subscribe(function (res) {
+                resolve(res);
+            }, function (err) {
+                reject(err);
+            });
+        });
+    };
+    BallotServiceProvider = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */]])
+    ], BallotServiceProvider);
+    return BallotServiceProvider;
+}());
+
+//# sourceMappingURL=ballot-service.js.map
 
 /***/ }),
 
@@ -475,7 +561,7 @@ var VotePage = (function () {
     };
     VotePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-vote',template:/*ion-inline-start:"/home/harish/election/src/pages/vote/vote.html"*/'<!--\n  Generated template for the VotePage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-header>\n\n  <ion-navbar>\n    <ion-title>Vote</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-card >\n    <ion-card-content>\n      <ion-card-title>\n          <ion-label>\n              Your vote counts!  \n          </ion-label> \n        </ion-card-title>\n      <p>\n        You voted for           <span style="font-size: 150%; background: inherit;">\n          {{vote}}\n          \n          </span>   \n      </p>\n\n        \n\n    </ion-card-content>\n  </ion-card>\n\n</ion-content>\n'/*ion-inline-end:"/home/harish/election/src/pages/vote/vote.html"*/,
+            selector: 'page-vote',template:/*ion-inline-start:"/home/harish/election/src/pages/vote/vote.html"*/'<!--\n  Generated template for the VotePage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-header>\n\n  <ion-navbar>\n    <ion-title>Vote</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-card >\n    <ion-card-content>\n      <ion-card-title>\n          <ion-label>\n              Your vote counts!  \n          </ion-label> \n        </ion-card-title>\n      <p>\n        You voted for has been received!!\n      </p>\n\n        \n\n    </ion-card-content>\n  </ion-card>\n\n</ion-content>\n'/*ion-inline-end:"/home/harish/election/src/pages/vote/vote.html"*/,
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */], __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */]])
     ], VotePage);
@@ -486,5 +572,5 @@ var VotePage = (function () {
 
 /***/ })
 
-},[201]);
+},[202]);
 //# sourceMappingURL=main.js.map
